@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ReactionView">
+        <attr name="reaction_board_background" format="color"/>
+        <attr name="reaction_board_height_normal" format="dimension"/>
+        <attr name="reaction_board_height_min" format="dimension"/>
+
+        <attr name="reaction_emotions_size_normal" format="dimension"/>
+        <attr name="reaction_emotions_size_choose_max" format="dimension"/>
+        <attr name="reaction_emotions_size_choose_min" format="dimension"/>
+
+        <attr name="reaction_emotions_margin" format="dimension"/>
+    </declare-styleable>
+</resources>
