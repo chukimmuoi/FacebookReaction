@@ -18,24 +18,30 @@ class Emotions(private val resources: Resources, image: Int) {
     private var bitmap: Bitmap = BitmapFactory.decodeResource(resources, image)
     private var paint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
-    private var left: Float   = 0.0F
-    private var top: Float    = 0.0f
-    private var right: Float  = 0.0f
-    private var bottom: Float = 0.0f
+    var left: Float   = 0.0F
+    var top: Float    = 0.0f
+    var right: Float  = 0.0f
+    var bottom: Float = 0.0f
+
+    var size: Int  = 0
+
+    var beginSize: Int = 0
+        get() = size
+    var endSize: Int   = 0
+
     private lateinit var rectF: RectF
 
     init {
         paint.isAntiAlias = true
     }
 
-    fun setCoordinates(xCenter: Float, yCenter: Float, width: Int, height: Int) {
-        val width = width.convertDpToPixel(resources)
-        val height = height.convertDpToPixel(resources)
+    fun setCoordinates(xCenter: Float, yCenter: Float, size: Int) {
+        this.size = size.convertDpToPixel(resources)
 
-        left   = xCenter - width * 0.5F
-        top    = yCenter - height * 0.5F
-        right  = left + width
-        bottom = top  + height
+        left   = xCenter - this.size * 0.5F
+        top    = yCenter - this.size * 0.5F
+        right  = left + this.size
+        bottom = top  + this.size
         rectF  = RectF(left, top, right, bottom)
 
     }

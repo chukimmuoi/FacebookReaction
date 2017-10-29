@@ -1,10 +1,8 @@
 package com.developers.chukimmuoi.reaction.`object`
 
-import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
-import com.developers.chukimmuoi.reaction.util.convertDpToPixel
 
 /**
  * @author  : Hanet Electronics
@@ -15,7 +13,7 @@ import com.developers.chukimmuoi.reaction.util.convertDpToPixel
  * @Project : FacebookReaction
  * Created by chukimmuoi on 22/10/2017.
  */
-class Board(private val resources: Resources, val color: Int) {
+class Board(val color: Int, val heightNormal: Int, val heightMin: Int) {
 
     private var mBoardPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
@@ -34,20 +32,47 @@ class Board(private val resources: Resources, val color: Int) {
     }
 
     fun setCoordinates(xCenter: Float, yCenter: Float, width: Int, height: Int) {
-        val width  = width.convertDpToPixel(resources)
-        val height =  height.convertDpToPixel(resources)
+        this.left   = xCenter - width * 0.5F
+        this.top    = yCenter - height * 0.5F
+        this.right  = left + width
+        this.bottom = top  + height
 
-        left   = xCenter - width * 0.5F
-        top    = yCenter - height * 0.5F
-        right  = left + width
-        bottom = top  + height
         rectF  = RectF(left, top, right, bottom)
 
         radius = height * 0.5F
     }
 
-    fun draw(canvas: Canvas) {
+    fun setCoordinates(left: Float, top: Float, right: Float, bottom: Float) {
+        this.left   = left
+        this.top    = top
+        this.right  = right
+        this.bottom = bottom
 
+        this.rectF = RectF(left, top, right, bottom)
+
+        radius     = (bottom - top) * 0.5F
+    }
+
+    fun draw(canvas: Canvas) {
         canvas.drawRoundRect(rectF, radius, radius, mBoardPaint)
+    }
+
+    fun checkMoveAction(xCoordinates: Float, yCoordinates: Float): Boolean {
+        var output = false
+        if (xCoordinates > left && xCoordinates < right && yCoordinates > bottom) {
+            output = true
+        }
+        return output
+    }
+
+    fun getCurrentHeight(): Float {
+        return bottom - top
+    }
+
+    fun setCurrentTop(height: Float) {
+        top = bottom - height
+
+        rectF  = RectF(left, top, right, bottom)
+        radius = height * 0.5F
     }
 }

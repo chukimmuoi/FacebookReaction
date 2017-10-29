@@ -4,10 +4,12 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.Transformation
 import com.developers.chukimmuoi.reaction.R
 import com.developers.chukimmuoi.reaction.`object`.Board
-import com.developers.chukimmuoi.reaction.`object`.Emotions
 import com.developers.chukimmuoi.reaction.util.convertDpToPixel
 
 /**
@@ -31,28 +33,29 @@ class ReactionView : View {
     )
 
     private var BOARD_BACKGROUND_DEFAULT: Int = Color.WHITE
-    private var BOARD_HEIGHT_NORMAL_DEFAULT: Int = 50
-    private var BOARD_HEIGHT_MIN_DEFAULT: Int = 38
+    private var BOARD_HEIGHT_NORMAL_DEFAULT: Int = 50.convertDpToPixel(resources)
+    private var BOARD_HEIGHT_MIN_DEFAULT: Int = 38.convertDpToPixel(resources)
 
     private var mBoardBackground = BOARD_BACKGROUND_DEFAULT
     private var mBoardHeightNormal = BOARD_HEIGHT_NORMAL_DEFAULT
     private var mBoardHeightMin = BOARD_HEIGHT_MIN_DEFAULT
 
-    private var EMOTION_SIZE_NORMAL_DEFAULT: Int = 40
-    private var EMOTION_SIZE_MAX_DEFAULT: Int = 100
-    private var EMOTION_SIZE_MIN_DEFAULT: Int = 28
+    private var EMOTION_SIZE_NORMAL_DEFAULT: Int = 40.convertDpToPixel(resources)
+    private var EMOTION_SIZE_MAX_DEFAULT: Int = 100.convertDpToPixel(resources)
+    private var EMOTION_SIZE_MIN_DEFAULT: Int = 28.convertDpToPixel(resources)
 
     private var mEmotionSizeNormal = EMOTION_SIZE_NORMAL_DEFAULT
     private var mEmotionSizeMax = EMOTION_SIZE_MAX_DEFAULT
     private var mEmotionSizeMin = EMOTION_SIZE_MIN_DEFAULT
 
-    private var EMOTION_MARGIN_DEFAULT: Int = 5
+    private var EMOTION_MARGIN_DEFAULT: Int = 5.convertDpToPixel(resources)
 
     private var mEmotionMargin = EMOTION_MARGIN_DEFAULT
 
     private var mBoard: Board
-    private lateinit var mEmotios: Array<Emotions>
+    private var mState: StateDraw = StateDraw.NORMAL
 
+    private var currentPosition = 0
 
     // State.
     enum class StateDraw {
@@ -102,9 +105,7 @@ class ReactionView : View {
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     init {
-        mBoard = Board(resources, mBoardBackground)
-
-        mEmotios = Array(EMOTION.size, { i -> Emotions(resources, EMOTION[i]) })
+        mBoard = Board(mBoardBackground, mBoardHeightNormal, mBoardHeightMin)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -113,18 +114,7 @@ class ReactionView : View {
         val xCenter = width * 0.5F
         val yCenter = height * 0.5F
 
-        val d = ((mEmotionSizeNormal + mEmotionMargin) / 2).convertDpToPixel(resources)
-        for (i in 0 until mEmotios.size) {
-            var delta = (2.5F - i) * -2 * d
-            mEmotios[i].setCoordinates(xCenter + delta, yCenter,
-                    mEmotionSizeNormal, mEmotionSizeNormal)
-        }
-
-        mBoard.setCoordinates(
-                xCenter, yCenter,
-                mEmotionSizeNormal * mEmotios.size + mEmotionMargin * (mEmotios.size + 1),
-                mBoardHeightNormal
-        )
+        mBoard.setCoordinates(xCenter, yCenter, 275.convertDpToPixel(resources), mBoardHeightNormal)
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
@@ -135,8 +125,62 @@ class ReactionView : View {
         super.onDraw(canvas)
 
         mBoard.draw(canvas)
-        for (i in 0 until mEmotios.size) {
-            mEmotios[i].draw(canvas)
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        var output = false
+
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> output = true
+            MotionEvent.ACTION_MOVE -> {
+                if (mBoard.checkMoveAction(event.x, event.y)) {
+                    choosing()
+                }
+                output = true
+            }
+            MotionEvent.ACTION_UP -> {
+                normal()
+                output = true
+            }
+        }
+
+        return output
+    }
+
+    private fun choosing() {
+        if (mState == StateDraw.CHOOSING) return
+
+        mState = StateDraw.CHOOSING
+
+        startAnimation(ChooseEmotionAnimation(mBoard.getCurrentHeight(), mBoardHeightMin.toFloat()))
+    }
+
+    private fun normal() {
+        if (mState == StateDraw.NORMAL) return
+
+        mState = StateDraw.NORMAL
+
+        startAnimation(ChooseEmotionAnimation(mBoard.getCurrentHeight(), mBoardHeightNormal.toFloat()))
+    }
+
+    inner class ChooseEmotionAnimation(val from: Float, val to: Float) : Animation() {
+
+        private val DURATION = 200L
+
+        init {
+            if (mState == StateDraw.CHOOSING) {
+                choosing()
+            } else if (mState == StateDraw.NORMAL) {
+                normal()
+            }
+
+            duration = DURATION
+        }
+
+        override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
+            mBoard.setCurrentTop(from + interpolatedTime * (to - from))
+
+            invalidate()
         }
     }
 }
