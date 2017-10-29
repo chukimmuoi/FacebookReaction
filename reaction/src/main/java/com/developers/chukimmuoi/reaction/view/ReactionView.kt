@@ -200,15 +200,18 @@ class ReactionView : View {
 
         override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
             var fromBoard = mBoard.getCurrentHeight()
-            var toBoard = getToBoard()
+            var toBoard   = getToBoard()
 
             var d = 0.0F
             for (i in 0 until mEmotions.size) {
                 var fromEmotion = mEmotions[i].getCurrentSize()
                 var toEmotion = getToEmotion(i)
-                mEmotions[i].setCurrentSize(getCurrentValue(interpolatedTime, fromEmotion, toEmotion),
+
+                mEmotions[i].setCurrentSize(
+                        getCurrentValue(interpolatedTime, fromEmotion, toEmotion),
                         (width - mCurrentWidth) * 0.5F,
-                        getCurrentValue(interpolatedTime, mEmotions[i].distance, d))
+                        getCurrentValue(interpolatedTime, mEmotions[i].distance, d)
+                )
                 d = getDistance(i, d)
             }
 

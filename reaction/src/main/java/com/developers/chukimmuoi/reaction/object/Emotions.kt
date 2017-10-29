@@ -12,9 +12,9 @@ import android.graphics.*
  * @Project : FacebookReaction
  * Created by chukimmuoi on 22/10/2017.
  */
-class Emotions(private val resources: Resources, image: Int,
-               sizeMax: Int, sizeNormal: Int, sizeMin: Int,
-               var margin: Int) {
+class Emotions(private val resources: Resources, val image: Int,
+               val sizeMax: Int, val sizeNormal: Int, val sizeMin: Int,
+               private val margin: Int) {
 
     private var bitmap: Bitmap = BitmapFactory.decodeResource(resources, image)
     private var paint: Paint   = Paint(Paint.ANTI_ALIAS_FLAG)
