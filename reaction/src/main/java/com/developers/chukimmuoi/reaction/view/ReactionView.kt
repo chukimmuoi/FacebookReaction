@@ -181,8 +181,6 @@ class ReactionView : View {
     }
 
     private fun normal() {
-        if (mState == StateDraw.NORMAL) return
-
         mState = StateDraw.NORMAL
 
         startAnimation(ChooseEmotionAnimation(-1))
@@ -192,7 +190,7 @@ class ReactionView : View {
      * Chỉ một Animation() được thực hiện tại một thời điểm,
      * nếu nhiều Animation() được dùng, sẽ thực hiện Animation cuối cùng.
      * */
-    inner class ChooseEmotionAnimation(val position: Int) : Animation() {
+    inner class ChooseEmotionAnimation(private val position: Int) : Animation() {
 
         private val DURATION = 200L
 
@@ -202,43 +200,52 @@ class ReactionView : View {
 
         override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
             var fromBoard = mBoard.getCurrentHeight()
-            var toBoard = mBoard.getCurrentHeight()
-
-            if (mState == StateDraw.CHOOSING) {
-                toBoard = mBoardHeightMin.toFloat()
-            } else if (mState == StateDraw.NORMAL) {
-                toBoard = mBoardHeightNormal.toFloat()
-            }
+            var toBoard = getToBoard()
 
             var d = 0.0F
             for (i in 0 until mEmotions.size) {
                 var fromEmotion = mEmotions[i].getCurrentSize()
-                var toEmotion = mEmotions[i].getCurrentSize()
-                if (mState == StateDraw.CHOOSING) {
-                    toEmotion = if (i == position) {
-                        mEmotionSizeMax.toFloat()
-                    } else {
-                        mEmotionSizeMin.toFloat()
-                    }
-                } else if (mState == StateDraw.NORMAL) {
-                    toEmotion = mEmotionSizeNormal.toFloat()
-                }
-                mEmotions[i].setCurrentSize(getCurrentValue(interpolatedTime, fromEmotion, toEmotion), (width - mCurrentWidth) * 0.5F, d)
-                if (mState == StateDraw.CHOOSING) {
-                    d += if (i == position) {
-                        mEmotionSizeMax + mEmotionMargin
-                    } else {
-                        mEmotionSizeMin + mEmotionMargin
-                    }
-                } else if (mState == StateDraw.NORMAL) {
-                    d += mEmotionSizeNormal + mEmotionMargin
-                }
+                var toEmotion = getToEmotion(i)
+                mEmotions[i].setCurrentSize(getCurrentValue(interpolatedTime, fromEmotion, toEmotion),
+                        (width - mCurrentWidth) * 0.5F, d)
+                d = getDistance(i, d)
             }
 
             mBoard.setCurrentHeight(getCurrentValue(interpolatedTime, fromBoard, toBoard))
 
             invalidate()
         }
+
+        private fun getToBoard() = when (mState) {
+            StateDraw.CHOOSING -> mBoardHeightMin.toFloat()
+            StateDraw.NORMAL -> mBoardHeightNormal.toFloat()
+            else -> mBoard.getCurrentHeight()
+        }
+
+        private fun getToEmotion(index: Int) = when (mState) {
+            StateDraw.CHOOSING -> {
+                if (index == position) {
+                    mEmotionSizeMax.toFloat()
+                } else {
+                    mEmotionSizeMin.toFloat()
+                }
+            }
+            StateDraw.NORMAL -> mEmotionSizeNormal.toFloat()
+            else -> mEmotions[index].getCurrentSize()
+        }
+
+        private fun getDistance(index: Int, d: Float) = when (mState) {
+            StateDraw.CHOOSING -> {
+                if (index == position) {
+                    d + mEmotionSizeMax + mEmotionMargin
+                } else {
+                    d + mEmotionSizeMin + mEmotionMargin
+                }
+            }
+            StateDraw.NORMAL -> d + mEmotionSizeNormal + mEmotionMargin
+            else -> 0.0F
+        }
+
 
         private fun getCurrentValue(interpolated: Float, from: Float, to: Float): Float {
             return from + interpolated * (to - from)
