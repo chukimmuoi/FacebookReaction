@@ -207,7 +207,8 @@ class ReactionView : View {
                 var fromEmotion = mEmotions[i].getCurrentSize()
                 var toEmotion = getToEmotion(i)
                 mEmotions[i].setCurrentSize(getCurrentValue(interpolatedTime, fromEmotion, toEmotion),
-                        (width - mCurrentWidth) * 0.5F, d)
+                        (width - mCurrentWidth) * 0.5F,
+                        getCurrentValue(interpolatedTime, mEmotions[i].distance, d))
                 d = getDistance(i, d)
             }
 

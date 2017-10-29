@@ -20,17 +20,21 @@ class Emotions(private val resources: Resources, image: Int,
     private var paint: Paint   = Paint(Paint.ANTI_ALIAS_FLAG)
 
     var left: Float   = 0.0F
-    var top: Float    = 0.0f
-    var right: Float  = 0.0f
-    var bottom: Float = 0.0f
+    var top: Float    = 0.0F
+    var right: Float  = 0.0F
+    var bottom: Float = 0.0F
 
     private lateinit var rectF: RectF
+
+    var distance: Float = 0.0F
 
     init {
         paint.isAntiAlias = true
     }
 
     fun setCoordinates(xStart: Float, d: Float, yCenter: Float, size: Int) {
+        this.distance = d
+
         this.left   = xStart + d + margin
         this.top    = yCenter - size * 0.5F
         this.right  = left + size
@@ -71,11 +75,12 @@ class Emotions(private val resources: Resources, image: Int,
     }
 
     fun getCurrentSize(): Float {
-
         return Math.max(bottom - top, right - left)
     }
 
     fun setCurrentSize(size: Float, xStart: Float, d: Float) {
+        distance = d
+
         left = xStart + d + margin
         top  = bottom - size
         right = left + size
