@@ -2,7 +2,6 @@ package com.developers.chukimmuoi.reaction.`object`
 
 import android.content.res.Resources
 import android.graphics.*
-import com.developers.chukimmuoi.reaction.util.convertDpToPixel
 
 /**
  * @author  : Hanet Electronics
@@ -13,21 +12,17 @@ import com.developers.chukimmuoi.reaction.util.convertDpToPixel
  * @Project : FacebookReaction
  * Created by chukimmuoi on 22/10/2017.
  */
-class Emotions(private val resources: Resources, image: Int) {
+class Emotions(private val resources: Resources, image: Int,
+               sizeMax: Int, sizeNormal: Int, sizeMin: Int,
+               var margin: Int) {
 
     private var bitmap: Bitmap = BitmapFactory.decodeResource(resources, image)
-    private var paint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private var paint: Paint   = Paint(Paint.ANTI_ALIAS_FLAG)
 
     var left: Float   = 0.0F
     var top: Float    = 0.0f
     var right: Float  = 0.0f
     var bottom: Float = 0.0f
-
-    var size: Int  = 0
-
-    var beginSize: Int = 0
-        get() = size
-    var endSize: Int   = 0
 
     private lateinit var rectF: RectF
 
@@ -35,19 +30,56 @@ class Emotions(private val resources: Resources, image: Int) {
         paint.isAntiAlias = true
     }
 
+    fun setCoordinates(xStart: Float, d: Float, yCenter: Float, size: Int) {
+        this.left   = xStart + d + margin
+        this.top    = yCenter - size * 0.5F
+        this.right  = left + size
+        this.bottom = top + size
+
+        rectF = RectF(left, top, right, bottom)
+    }
+
+    fun setCoordinates(left: Float, top: Float, right: Float, bottom: Float) {
+        this.left = left
+        this.top = top
+        this.right = right
+        this.bottom = bottom
+
+        rectF = RectF(left, top, right, bottom)
+    }
+
     fun setCoordinates(xCenter: Float, yCenter: Float, size: Int) {
-        this.size = size.convertDpToPixel(resources)
+        this.left   = xCenter - size * 0.5F
+        this.top    = yCenter - size * 0.5F
+        this.right  = left + size
+        this.bottom = top  + size
 
-        left   = xCenter - this.size * 0.5F
-        top    = yCenter - this.size * 0.5F
-        right  = left + this.size
-        bottom = top  + this.size
         rectF  = RectF(left, top, right, bottom)
-
     }
 
     fun draw(canvas: Canvas) {
-
         canvas.drawBitmap(bitmap, null, rectF, paint)
+    }
+
+    fun checkMoveAction(xCoordinates: Float, yCoordinates: Float): Boolean {
+        var output = false
+        if (xCoordinates > left && xCoordinates < right && yCoordinates > bottom) {
+            output = true
+        }
+
+        return output
+    }
+
+    fun getCurrentSize(): Float {
+
+        return Math.max(bottom - top, right - left)
+    }
+
+    fun setCurrentSize(size: Float, xStart: Float, d: Float) {
+        left = xStart + d + margin
+        top  = bottom - size
+        right = left + size
+
+        rectF  = RectF(left, top, right, bottom)
     }
 }

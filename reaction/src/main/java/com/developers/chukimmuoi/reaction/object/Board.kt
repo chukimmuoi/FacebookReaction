@@ -38,7 +38,6 @@ class Board(val color: Int, val heightNormal: Int, val heightMin: Int) {
         this.bottom = top  + height
 
         rectF  = RectF(left, top, right, bottom)
-
         radius = height * 0.5F
     }
 
@@ -48,8 +47,7 @@ class Board(val color: Int, val heightNormal: Int, val heightMin: Int) {
         this.right  = right
         this.bottom = bottom
 
-        this.rectF = RectF(left, top, right, bottom)
-
+        rectF = RectF(left, top, right, bottom)
         radius     = (bottom - top) * 0.5F
     }
 
@@ -62,6 +60,7 @@ class Board(val color: Int, val heightNormal: Int, val heightMin: Int) {
         if (xCoordinates > left && xCoordinates < right && yCoordinates > bottom) {
             output = true
         }
+
         return output
     }
 
@@ -69,7 +68,7 @@ class Board(val color: Int, val heightNormal: Int, val heightMin: Int) {
         return bottom - top
     }
 
-    fun setCurrentTop(height: Float) {
+    fun setCurrentHeight(height: Float) {
         top = bottom - height
 
         rectF  = RectF(left, top, right, bottom)
