@@ -33,6 +33,15 @@ class ReactionView : View {
             R.drawable.angry
     )
 
+    private val TITLE = intArrayOf(
+            R.string.title_emotion_like,
+            R.string.title_emotion_love,
+            R.string.title_emotion_haha,
+            R.string.title_emotion_wow,
+            R.string.title_emotion_cry,
+            R.string.title_emotion_angry
+    )
+
     private var BOARD_BACKGROUND_DEFAULT: Int = Color.WHITE
     private var BOARD_HEIGHT_NORMAL_DEFAULT: Int = 50.convertDpToPixel(resources)
     private var BOARD_HEIGHT_MIN_DEFAULT: Int = 38.convertDpToPixel(resources)
@@ -111,7 +120,7 @@ class ReactionView : View {
         mBoard    = Board(mBoardBackground, mBoardHeightNormal, mBoardHeightMin)
         mEmotions = Array(EMOTION.size, {
             index -> Emotions(
-                resources, EMOTION[index],
+                resources, EMOTION[index], TITLE[index],
                 mEmotionSizeMax, mEmotionSizeNormal, mEmotionSizeMin, mEmotionMargin)
         })
 
@@ -192,7 +201,7 @@ class ReactionView : View {
      * */
     inner class ChooseEmotionAnimation(private val position: Int) : Animation() {
 
-        private val DURATION = 200L
+        private val DURATION = 3000L
 
         init {
             duration = DURATION

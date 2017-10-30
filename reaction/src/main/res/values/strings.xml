@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Reaction</string>
+
+    <string name="title_emotion_like">Like</string>
+    <string name="title_emotion_love">Love</string>
+    <string name="title_emotion_haha">Haha</string>
+    <string name="title_emotion_wow">Wow</string>
+    <string name="title_emotion_cry">Cry</string>
+    <string name="title_emotion_angry">Angry</string>
 </resources>
