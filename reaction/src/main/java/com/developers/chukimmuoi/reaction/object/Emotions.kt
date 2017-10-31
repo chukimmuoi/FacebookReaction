@@ -3,7 +3,8 @@ package com.developers.chukimmuoi.reaction.`object`
 import android.content.res.Resources
 import android.graphics.*
 import android.text.TextPaint
-import com.developers.chukimmuoi.reaction.util.convertDpToPixel
+import com.developers.chukimmuoi.reaction.util.getGoldenRatioLarge
+import com.developers.chukimmuoi.reaction.util.getGoldenRatioSmall
 
 /**
  * @author  : Hanet Electronics
@@ -15,7 +16,7 @@ import com.developers.chukimmuoi.reaction.util.convertDpToPixel
  * Created by chukimmuoi on 22/10/2017.
  */
 class Emotions(private val resources: Resources, val image: Int, val title: Int,
-               val sizeMax: Int, val sizeNormal: Int, val sizeMin: Int,
+               val sizeMax: Int, private val sizeNormal: Int, val sizeMin: Int,
                private val margin: Int) {
 
     private var bitmap: Bitmap = BitmapFactory.decodeResource(resources, image)
@@ -92,8 +93,8 @@ class Emotions(private val resources: Resources, val image: Int, val title: Int,
                 bgTitlePaint
         )
 
-        var xPos = bgTitleRectF.left + bgTitleRectF.width() * 0.5F
-        var yPos = bgTitleRectF.top + bgTitleRectF.height() * 0.5F-
+        var xPos = bgTitleRectF.left  + bgTitleRectF.width() * 0.5F
+        var yPos = bgTitleRectF.top   + bgTitleRectF.height() * 0.5F -
                 (titlePaint.descent() + titlePaint.ascent()) * 0.5F
 
         canvas.drawText(resources.getString(title), xPos, yPos, titlePaint)
@@ -109,6 +110,7 @@ class Emotions(private val resources: Resources, val image: Int, val title: Int,
     }
 
     fun getCurrentSize(): Float {
+
         return Math.max(bottom - top, right - left)
     }
 
@@ -125,8 +127,8 @@ class Emotions(private val resources: Resources, val image: Int, val title: Int,
 
     private fun createBackgroundTitle(size: Float, left: Float, top: Float, right: Float, bottom: Float) {
         val width  = (size - sizeNormal)
-        val height = width * 2 / (1 + Math.sqrt(5.0)).toFloat()
-        val margin = 30F.convertDpToPixel(resources)
+        val height = width.getGoldenRatioSmall()
+        val margin = (width - height).getGoldenRatioLarge()
 
         val xCenter = left + (right - left) * 0.5F
         val yCenter = top + (bottom - top) * 0.5F - size * 0.5F - margin
@@ -136,6 +138,6 @@ class Emotions(private val resources: Resources, val image: Int, val title: Int,
                 xCenter + width * 0.5F, yCenter + height * 0.5F
         )
 
-        titlePaint.textSize = (width - height) * 2 / (1 + Math.sqrt(5.0)).toFloat()
+        titlePaint.textSize = (width - height).getGoldenRatioSmall()
     }
 }

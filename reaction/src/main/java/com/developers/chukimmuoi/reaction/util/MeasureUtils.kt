@@ -45,3 +45,23 @@ fun Int.convertDpToPixel(resources: Resources) : Int {
     return Math.round(this * resources.displayMetrics.density)
 }
 
+fun Int.getGoldenRatioSmall() : Int {
+
+    return Math.round(this / ((1 + Math.sqrt(5.0)) / 2)).toInt()
+}
+
+fun Int.getGoldenRatioLarge() : Int {
+
+    return Math.round(this * ((1 + Math.sqrt(5.0)) / 2)).toInt()
+}
+
+fun Float.getGoldenRatioSmall() : Float {
+
+    return (this / ((1 + Math.sqrt(5.0)) / 2)).toFloat()
+}
+
+fun Float.getGoldenRatioLarge() : Float {
+
+    return (this * ((1 + Math.sqrt(5.0)) / 2)).toFloat()
+}
+
