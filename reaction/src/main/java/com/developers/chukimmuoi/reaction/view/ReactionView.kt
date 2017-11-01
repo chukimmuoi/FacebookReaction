@@ -143,6 +143,8 @@ class ReactionView : View {
         mBoard.setCoordinates(xCenter, yCenter,
                 mCurrentWidth,
                 mBoardHeightNormal)
+
+        show()
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
@@ -267,6 +269,8 @@ class ReactionView : View {
     }
 
     fun show() {
+        visibility = VISIBLE
+
         mState = StateDraw.START
 
         startAnimation(StartEmotionAnimation())
@@ -284,28 +288,28 @@ class ReactionView : View {
 
         override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
             if (mState == StateDraw.START) {
+                val change = easeOutBack.calculateDescending(interpolatedTime, 0F, 500F, 1F)
                 val currentTime = interpolatedTime * DURATION
-                val lastValue = 150F.convertDpToPixel(resources)
                 if (currentTime > 0) {
-                    mBoard.setCurrentTopAndBottom(height * 0.5F + easeOutBack.getCoordinateYFromTime(interpolatedTime, lastValue))
+                    mBoard.setCurrentTopAndBottom(height * 0.5F + change)
                 }
                 if (currentTime > 100) {
-                    mEmotions[0].setCurrentTopAndBottom(height * 0.5F + easeOutBack.getCoordinateYFromTime(interpolatedTime, lastValue))
+                    mEmotions[0].setCurrentTopAndBottom(height * 0.5F + change)
                 }
                 if (currentTime > 200) {
-                    mEmotions[1].setCurrentTopAndBottom(height * 0.5F + easeOutBack.getCoordinateYFromTime(interpolatedTime, lastValue))
+                    mEmotions[1].setCurrentTopAndBottom(height * 0.5F + change)
                 }
                 if (currentTime > 300) {
-                    mEmotions[2].setCurrentTopAndBottom(height * 0.5F + easeOutBack.getCoordinateYFromTime(interpolatedTime, lastValue))
+                    mEmotions[2].setCurrentTopAndBottom(height * 0.5F + change)
                 }
                 if (currentTime > 400) {
-                    mEmotions[3].setCurrentTopAndBottom(height * 0.5F + easeOutBack.getCoordinateYFromTime(interpolatedTime, lastValue))
+                    mEmotions[3].setCurrentTopAndBottom(height * 0.5F + change)
                 }
                 if (currentTime > 500) {
-                    mEmotions[4].setCurrentTopAndBottom(height * 0.5F + easeOutBack.getCoordinateYFromTime(interpolatedTime, lastValue))
+                    mEmotions[4].setCurrentTopAndBottom(height * 0.5F + change)
                 }
                 if (currentTime > 600) {
-                    mEmotions[5].setCurrentTopAndBottom(height * 0.5F + easeOutBack.getCoordinateYFromTime(interpolatedTime, lastValue))
+                    mEmotions[5].setCurrentTopAndBottom(height * 0.5F + change)
                 }
 
                 invalidate()
