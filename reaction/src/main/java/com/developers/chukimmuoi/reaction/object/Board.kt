@@ -74,4 +74,12 @@ class Board(val color: Int, val heightNormal: Int, val heightMin: Int) {
         rectF  = RectF(left, top, right, bottom)
         radius = height * 0.5F
     }
+
+    fun setCurrentTopAndBottom(yCenter: Float) {
+        this.top = yCenter - heightNormal * 0.5F
+        this.bottom = top  + heightNormal
+
+        rectF  = RectF(left, top, right, bottom)
+        radius = heightNormal * 0.5F
+    }
 }

@@ -125,6 +125,14 @@ class Emotions(private val resources: Resources, val image: Int, val title: Int,
         createBackgroundTitle(size, left, top, right, bottom)
     }
 
+    fun setCurrentTopAndBottom(yCenter: Float) {
+        top    = yCenter - sizeNormal * 0.5F
+        bottom = yCenter + sizeNormal * 0.5F
+
+        emotionRectF = RectF(left, top, right, bottom)
+        createBackgroundTitle(Math.max(right - left, bottom - top), left, top, right, bottom)
+    }
+
     private fun createBackgroundTitle(size: Float, left: Float, top: Float, right: Float, bottom: Float) {
         val width  = (size - sizeNormal)
         val height = width.getGoldenRatioSmall()

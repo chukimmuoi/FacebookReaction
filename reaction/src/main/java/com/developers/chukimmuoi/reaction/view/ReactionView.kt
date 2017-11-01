@@ -11,6 +11,7 @@ import android.view.animation.Transformation
 import com.developers.chukimmuoi.reaction.R
 import com.developers.chukimmuoi.reaction.`object`.Board
 import com.developers.chukimmuoi.reaction.`object`.Emotions
+import com.developers.chukimmuoi.reaction.animation.EaseOutBack
 import com.developers.chukimmuoi.reaction.util.convertDpToPixel
 
 /**
@@ -262,6 +263,53 @@ class ReactionView : View {
 
         private fun getCurrentValue(interpolated: Float, from: Float, to: Float): Float {
             return from + interpolated * (to - from)
+        }
+    }
+
+    fun show() {
+        mState = StateDraw.START
+
+        startAnimation(StartEmotionAnimation())
+    }
+
+    inner class StartEmotionAnimation: Animation() {
+
+        private val DURATION = 900L
+
+        private val easeOutBack = EaseOutBack()
+
+        init {
+            duration = DURATION
+        }
+
+        override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
+            if (mState == StateDraw.START) {
+                val currentTime = interpolatedTime * DURATION
+                val lastValue = 150F.convertDpToPixel(resources)
+                if (currentTime > 0) {
+                    mBoard.setCurrentTopAndBottom(height * 0.5F + easeOutBack.getCoordinateYFromTime(interpolatedTime, lastValue))
+                }
+                if (currentTime > 100) {
+                    mEmotions[0].setCurrentTopAndBottom(height * 0.5F + easeOutBack.getCoordinateYFromTime(interpolatedTime, lastValue))
+                }
+                if (currentTime > 200) {
+                    mEmotions[1].setCurrentTopAndBottom(height * 0.5F + easeOutBack.getCoordinateYFromTime(interpolatedTime, lastValue))
+                }
+                if (currentTime > 300) {
+                    mEmotions[2].setCurrentTopAndBottom(height * 0.5F + easeOutBack.getCoordinateYFromTime(interpolatedTime, lastValue))
+                }
+                if (currentTime > 400) {
+                    mEmotions[3].setCurrentTopAndBottom(height * 0.5F + easeOutBack.getCoordinateYFromTime(interpolatedTime, lastValue))
+                }
+                if (currentTime > 500) {
+                    mEmotions[4].setCurrentTopAndBottom(height * 0.5F + easeOutBack.getCoordinateYFromTime(interpolatedTime, lastValue))
+                }
+                if (currentTime > 600) {
+                    mEmotions[5].setCurrentTopAndBottom(height * 0.5F + easeOutBack.getCoordinateYFromTime(interpolatedTime, lastValue))
+                }
+
+                invalidate()
+            }
         }
     }
 }
