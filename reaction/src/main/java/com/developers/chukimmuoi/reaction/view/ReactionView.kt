@@ -280,35 +280,33 @@ class ReactionView : View {
 
         private val DURATION = 900L
 
-        private val easeOutBack = EaseOutBack()
+        private val easeOutBack = EaseOutBack
+
+        private val yLast = height * 0.5F
+
+        private val startTimeUnit: Float
 
         init {
             duration = DURATION
+
+            easeOutBack.deltaTime = 300F
+            easeOutBack.end       = 500F
+
+            startTimeUnit = (duration - easeOutBack.deltaTime) / mEmotions.size
         }
 
         override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
             if (mState == StateDraw.START) {
                 val currentTime = interpolatedTime * DURATION
-                if (currentTime > 0) {
-                    mBoard.setCurrentTopAndBottom(height * 0.5F + easeOutBack.calculateDescending(currentTime, 300F, 0F, 500F))
-                }
-                if (currentTime > 100) {
-                    mEmotions[0].setCurrentTopAndBottom(height * 0.5F + easeOutBack.calculateDescending(currentTime, 300F, 100F, 500F))
-                }
-                if (currentTime > 200) {
-                    mEmotions[1].setCurrentTopAndBottom(height * 0.5F + easeOutBack.calculateDescending(currentTime, 300F, 200F, 500F))
-                }
-                if (currentTime > 300) {
-                    mEmotions[2].setCurrentTopAndBottom(height * 0.5F + easeOutBack.calculateDescending(currentTime, 300F, 300F, 500F))
-                }
-                if (currentTime > 400) {
-                    mEmotions[3].setCurrentTopAndBottom(height * 0.5F + easeOutBack.calculateDescending(currentTime, 300F, 400F, 500F))
-                }
-                if (currentTime > 500) {
-                    mEmotions[4].setCurrentTopAndBottom(height * 0.5F + easeOutBack.calculateDescending(currentTime, 300F, 500F, 500F))
-                }
-                if (currentTime > 600) {
-                    mEmotions[5].setCurrentTopAndBottom(height * 0.5F + easeOutBack.calculateDescending(currentTime, 300F, 600F, 500F))
+                for (i in 0 until mEmotions.size + 1) {
+                    val startTime = i * startTimeUnit
+                    if (currentTime > startTime) {
+                        if(i == 0) {
+                            mBoard.setCurrentTopAndBottom(yLast + easeOutBack.calculateDescending(currentTime, 0F))
+                        } else {
+                            mEmotions[i-1].setCurrentTopAndBottom(yLast + easeOutBack.calculateDescending(currentTime, startTime))
+                        }
+                    }
                 }
 
                 invalidate()

@@ -9,11 +9,19 @@ package com.developers.chukimmuoi.reaction.animation
  * @Project: FacebookReaction
  * Created by CHUKIMMUOI on 11/1/2017.
  */
-class EaseOutBack {
+object EaseOutBack {
 
     private val s = 1.70158
 
-    fun calculateDescending(currentTime: Float, deltaTime: Float, startTime: Float, end: Float, begin: Float = 0F): Float {
+    var deltaTime: Float = 0.0F
+    var end: Float       = 0.0F
+
+    fun calculateDescending(currentTime: Float, deltaTime: Float, startTime: Float, end: Float,
+                            begin: Float = 0F): Float {
+        return end - calculateAscending(currentTime, deltaTime, startTime, end, begin)
+    }
+
+    fun calculateDescending(currentTime: Float, startTime: Float, begin: Float = 0F): Float {
         return end - calculateAscending(currentTime, deltaTime, startTime, end, begin)
     }
 
@@ -24,9 +32,14 @@ class EaseOutBack {
      * @param deltaTime khoảng thời gian chạy
      * @param startTime thời gian bắt đầu, nằm trong khoảng [0, DURATION] của currentTime
      * */
-    fun calculateAscending(currentTime: Float, deltaTime: Float, startTime: Float, end: Float, begin: Float = 0F): Float {
+    fun calculateAscending(currentTime: Float, deltaTime: Float, startTime: Float, end: Float,
+                           begin: Float = 0F): Float {
         // NOTE: Luôn đảm bảo giá trị của time nằm trong khoảng [-1, 0], begin: Float
         var time = Math.min(currentTime - startTime, deltaTime) / deltaTime - 1
         return (end * (time * time * ((s + 1) * time + s) + 1) + begin).toFloat()
+    }
+
+    fun calculateAscending(currentTime: Float, startTime: Float, begin: Float = 0F): Float {
+        return calculateAscending(currentTime, deltaTime, startTime, end, begin)
     }
 }
