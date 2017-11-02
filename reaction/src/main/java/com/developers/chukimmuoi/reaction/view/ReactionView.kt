@@ -131,6 +131,34 @@ class ReactionView : View {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
+        // Width & height nhỏ nhất của number.
+        val desiredWidth = mCurrentWidth
+        val desireHeight = mCurrentWidth
+
+        // Tính toán, thỏa thuận với viewGroup để xác định kích thước cho view.
+        val width = reconcileSize(desiredWidth, widthMeasureSpec)
+        val height = reconcileSize(desireHeight, heightMeasureSpec)
+
+        setMeasuredDimension(width, height)
+    }
+
+    private fun reconcileSize(contentSize: Int, measureSpec: Int): Int {
+        val mode     = View.MeasureSpec.getMode(measureSpec)
+        val specSize = View.MeasureSpec.getSize(measureSpec)
+
+        return when (mode) {
+            // match_parent | 300dp.
+            View.MeasureSpec.EXACTLY -> specSize
+            // wrap_content | match_parent.
+            View.MeasureSpec.AT_MOST -> Math.min(contentSize, specSize)
+            View.MeasureSpec.UNSPECIFIED -> contentSize
+            else -> contentSize
+        }
+    }
+
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+        // Chính giữa màn hình.
         val xCenter = width * 0.5F
         val yCenter = height * 0.5F
 
@@ -143,10 +171,6 @@ class ReactionView : View {
         mBoard.setCoordinates(xCenter, yCenter,
                 mCurrentWidth,
                 mBoardHeightNormal)
-    }
-
-    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        super.onLayout(changed, left, top, right, bottom)
     }
 
     override fun onDraw(canvas: Canvas) {
