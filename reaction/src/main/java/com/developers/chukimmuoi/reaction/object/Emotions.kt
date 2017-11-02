@@ -59,9 +59,9 @@ class Emotions(private val resources: Resources, val image: Int, val title: Int,
     }
 
     fun setCoordinates(left: Float, top: Float, right: Float, bottom: Float) {
-        this.left = left
-        this.top = top
-        this.right = right
+        this.left   = left
+        this.top    = top
+        this.right  = right
         this.bottom = bottom
 
         emotionRectF = RectF(left, top, right, bottom)
@@ -117,8 +117,8 @@ class Emotions(private val resources: Resources, val image: Int, val title: Int,
     fun setCurrentSize(size: Float, xStart: Float, d: Float) {
         distance = d
 
-        left = xStart + d + margin
-        top  = bottom - size
+        left  = xStart + d + margin
+        top   = bottom - size
         right = left + size
 
         emotionRectF = RectF(left, top, right, bottom)

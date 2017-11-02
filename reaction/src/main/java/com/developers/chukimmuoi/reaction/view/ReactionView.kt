@@ -44,16 +44,16 @@ class ReactionView : View {
     )
 
     private var BOARD_BACKGROUND_DEFAULT: Int = Color.WHITE
-    private var BOARD_HEIGHT_NORMAL_DEFAULT: Int = 50.convertDpToPixel(resources)
-    private var BOARD_HEIGHT_MIN_DEFAULT: Int = 38.convertDpToPixel(resources)
+    private var BOARD_HEIGHT_NORMAL_DEFAULT: Int = 50.convertDpToPixel(resources) // 40 + 2 * 5 = 50
+    private var BOARD_HEIGHT_MIN_DEFAULT: Int = 38.convertDpToPixel(resources) // 28 + 2 * 5 = 38
 
     private var mBoardBackground = BOARD_BACKGROUND_DEFAULT
     private var mBoardHeightNormal = BOARD_HEIGHT_NORMAL_DEFAULT
     private var mBoardHeightMin = BOARD_HEIGHT_MIN_DEFAULT
 
-    private var EMOTION_SIZE_NORMAL_DEFAULT: Int = 40.convertDpToPixel(resources)
-    private var EMOTION_SIZE_MAX_DEFAULT: Int = 100.convertDpToPixel(resources)
-    private var EMOTION_SIZE_MIN_DEFAULT: Int = 28.convertDpToPixel(resources)
+    private var EMOTION_SIZE_NORMAL_DEFAULT: Int = 40.convertDpToPixel(resources) // 40 * 6 = 240
+    private var EMOTION_SIZE_MAX_DEFAULT: Int = 100.convertDpToPixel(resources) // 100 * 1 + 28 * 5 = 240
+    private var EMOTION_SIZE_MIN_DEFAULT: Int = 28.convertDpToPixel(resources) // 100 * 1 + 28 * 5 = 240
 
     private var mEmotionSizeNormal = EMOTION_SIZE_NORMAL_DEFAULT
     private var mEmotionSizeMax = EMOTION_SIZE_MAX_DEFAULT
@@ -143,8 +143,6 @@ class ReactionView : View {
         mBoard.setCoordinates(xCenter, yCenter,
                 mCurrentWidth,
                 mBoardHeightNormal)
-
-        show()
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
@@ -204,7 +202,7 @@ class ReactionView : View {
      * */
     inner class ChooseEmotionAnimation(private val position: Int) : Animation() {
 
-        private val DURATION = 3000L
+        private val DURATION = 200L
 
         init {
             duration = DURATION
