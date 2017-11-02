@@ -22,7 +22,7 @@ object EaseOutBack {
     }
 
     fun calculateDescending(currentTime: Float, startTime: Float, begin: Float = 0F): Float {
-        return end - calculateAscending(currentTime, deltaTime, startTime, end, begin)
+        return calculateDescending(currentTime, deltaTime, startTime, end, begin)
     }
 
     /**
