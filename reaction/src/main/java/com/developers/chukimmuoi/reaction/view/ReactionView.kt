@@ -288,28 +288,27 @@ class ReactionView : View {
 
         override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
             if (mState == StateDraw.START) {
-                val change = easeOutBack.calculateDescending(interpolatedTime, 0F, 500F, 1F)
                 val currentTime = interpolatedTime * DURATION
                 if (currentTime > 0) {
-                    mBoard.setCurrentTopAndBottom(height * 0.5F + change)
+                    mBoard.setCurrentTopAndBottom(height * 0.5F + easeOutBack.calculateDescending(currentTime, 300F, 0F, 500F))
                 }
                 if (currentTime > 100) {
-                    mEmotions[0].setCurrentTopAndBottom(height * 0.5F + change)
+                    mEmotions[0].setCurrentTopAndBottom(height * 0.5F + easeOutBack.calculateDescending(currentTime, 300F, 100F, 500F))
                 }
                 if (currentTime > 200) {
-                    mEmotions[1].setCurrentTopAndBottom(height * 0.5F + change)
+                    mEmotions[1].setCurrentTopAndBottom(height * 0.5F + easeOutBack.calculateDescending(currentTime, 300F, 200F, 500F))
                 }
                 if (currentTime > 300) {
-                    mEmotions[2].setCurrentTopAndBottom(height * 0.5F + change)
+                    mEmotions[2].setCurrentTopAndBottom(height * 0.5F + easeOutBack.calculateDescending(currentTime, 300F, 300F, 500F))
                 }
                 if (currentTime > 400) {
-                    mEmotions[3].setCurrentTopAndBottom(height * 0.5F + change)
+                    mEmotions[3].setCurrentTopAndBottom(height * 0.5F + easeOutBack.calculateDescending(currentTime, 300F, 400F, 500F))
                 }
                 if (currentTime > 500) {
-                    mEmotions[4].setCurrentTopAndBottom(height * 0.5F + change)
+                    mEmotions[4].setCurrentTopAndBottom(height * 0.5F + easeOutBack.calculateDescending(currentTime, 300F, 500F, 500F))
                 }
                 if (currentTime > 600) {
-                    mEmotions[5].setCurrentTopAndBottom(height * 0.5F + change)
+                    mEmotions[5].setCurrentTopAndBottom(height * 0.5F + easeOutBack.calculateDescending(currentTime, 300F, 600F, 500F))
                 }
 
                 invalidate()

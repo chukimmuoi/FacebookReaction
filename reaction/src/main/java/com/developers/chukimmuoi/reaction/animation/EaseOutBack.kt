@@ -13,18 +13,20 @@ class EaseOutBack {
 
     private val s = 1.70158
 
-    fun calculateDescending(interpolatedTime: Float, begin: Float, end: Float, deltaTime: Float): Float {
-        return end - calculateAscending(interpolatedTime, begin, end, deltaTime)
+    fun calculateDescending(currentTime: Float, deltaTime: Float, startTime: Float, end: Float, begin: Float = 0F): Float {
+        return end - calculateAscending(currentTime, deltaTime, startTime, end, begin)
     }
 
     /**
-     * @param interpolatedTime gia tri time chay tu [0, 1]
-     * @param begin gia tri bat dau, thuong la 0
-     * @param end gia tri ket thuc
-     * @param deltaTime thoi gian chay???
+     * @param currentTime giá trị thời gian chạy từ [0, DURATION] vì currentTime = [0, 1] * DURATION
+     * @param begin giá trị khi bắt đầu, thường là 0
+     * @param end giá trị kết thúc, phải khác 0
+     * @param deltaTime khoảng thời gian chạy
+     * @param startTime thời gian bắt đầu, nằm trong khoảng [0, DURATION] của currentTime
      * */
-    fun calculateAscending(interpolatedTime: Float, begin: Float, end: Float, deltaTime: Float): Float {
-        var time = interpolatedTime * deltaTime / deltaTime - 1
+    fun calculateAscending(currentTime: Float, deltaTime: Float, startTime: Float, end: Float, begin: Float = 0F): Float {
+        // NOTE: Luôn đảm bảo giá trị của time nằm trong khoảng [-1, 0], begin: Float
+        var time = Math.min(currentTime - startTime, deltaTime) / deltaTime - 1
         return (end * (time * time * ((s + 1) * time + s) + 1) + begin).toFloat()
     }
 }
