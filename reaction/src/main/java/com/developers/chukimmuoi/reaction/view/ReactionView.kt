@@ -43,21 +43,21 @@ class ReactionView : View {
             R.string.title_emotion_angry
     )
 
-    private var BOARD_BACKGROUND_DEFAULT: Int = Color.WHITE
+    private var BOARD_BACKGROUND_DEFAULT: Int    = Color.WHITE
     private var BOARD_HEIGHT_NORMAL_DEFAULT: Int = 50.convertDpToPixel(resources) // 40 + 2 * 5 = 50
-    private var BOARD_HEIGHT_MIN_DEFAULT: Int = 38.convertDpToPixel(resources) // 28 + 2 * 5 = 38
+    private var BOARD_HEIGHT_MIN_DEFAULT: Int    = 38.convertDpToPixel(resources) // 28 + 2 * 5 = 38
 
-    private var mBoardBackground = BOARD_BACKGROUND_DEFAULT
+    private var mBoardBackground   = BOARD_BACKGROUND_DEFAULT
     private var mBoardHeightNormal = BOARD_HEIGHT_NORMAL_DEFAULT
-    private var mBoardHeightMin = BOARD_HEIGHT_MIN_DEFAULT
+    private var mBoardHeightMin    = BOARD_HEIGHT_MIN_DEFAULT
 
     private var EMOTION_SIZE_NORMAL_DEFAULT: Int = 40.convertDpToPixel(resources) // 40 * 6 = 240
-    private var EMOTION_SIZE_MAX_DEFAULT: Int = 100.convertDpToPixel(resources) // 100 * 1 + 28 * 5 = 240
-    private var EMOTION_SIZE_MIN_DEFAULT: Int = 28.convertDpToPixel(resources) // 100 * 1 + 28 * 5 = 240
+    private var EMOTION_SIZE_MAX_DEFAULT: Int    = 100.convertDpToPixel(resources) // 100 * 1 + 28 * 5 = 240
+    private var EMOTION_SIZE_MIN_DEFAULT: Int    = 28.convertDpToPixel(resources) // 100 * 1 + 28 * 5 = 240
 
     private var mEmotionSizeNormal = EMOTION_SIZE_NORMAL_DEFAULT
-    private var mEmotionSizeMax = EMOTION_SIZE_MAX_DEFAULT
-    private var mEmotionSizeMin = EMOTION_SIZE_MIN_DEFAULT
+    private var mEmotionSizeMax    = EMOTION_SIZE_MAX_DEFAULT
+    private var mEmotionSizeMin    = EMOTION_SIZE_MIN_DEFAULT
 
     private var EMOTION_MARGIN_DEFAULT: Int = 5.convertDpToPixel(resources)
 
@@ -120,8 +120,7 @@ class ReactionView : View {
     init {
         mBoard    = Board(mBoardBackground, mBoardHeightNormal, mBoardHeightMin)
         mEmotions = Array(EMOTION.size, {
-            index -> Emotions(
-                resources, EMOTION[index], TITLE[index],
+            index -> Emotions(resources, EMOTION[index], TITLE[index],
                 mEmotionSizeMax, mEmotionSizeNormal, mEmotionSizeMin, mEmotionMargin)
         })
 
@@ -136,8 +135,9 @@ class ReactionView : View {
         val desireHeight = mCurrentWidth
 
         // Tính toán, thỏa thuận với viewGroup để xác định kích thước cho view.
-        val width = reconcileSize(desiredWidth, widthMeasureSpec)
-        val height = reconcileSize(desireHeight, heightMeasureSpec)
+        // Sử dụng method resolveSize() có sẵn trong view hoăc reconcileSize() bên
+        val width  = resolveSize(desiredWidth, widthMeasureSpec)
+        val height = resolveSize(desireHeight, heightMeasureSpec)
 
         setMeasuredDimension(width, height)
     }
@@ -162,15 +162,17 @@ class ReactionView : View {
         val xCenter = width * 0.5F
         val yCenter = height * 0.5F
 
+        // Xác định vị trí thanh board.
+        mBoard.setCoordinates(xCenter, yCenter,
+                mCurrentWidth,
+                mBoardHeightNormal)
+
+        // Xác định vị trí cho 6 biểu tượng emotions.
         var d = 0.0F
         for (i in 0 until mEmotions.size) {
             mEmotions[i].setCoordinates(xCenter - mCurrentWidth / 2, d, yCenter, mEmotionSizeNormal)
             d += mEmotionSizeNormal + mEmotionMargin
         }
-
-        mBoard.setCoordinates(xCenter, yCenter,
-                mCurrentWidth,
-                mBoardHeightNormal)
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -183,6 +185,11 @@ class ReactionView : View {
         }
     }
 
+    /**
+     * Xử lý sự kiện: chạm, di chuyển và nhả.
+     *
+     * @return true nếu các sự kiện được xử lý, false nếu không.
+     * */
     override fun onTouchEvent(event: MotionEvent): Boolean {
         return when (event.action) {
             MotionEvent.ACTION_DOWN -> {
@@ -205,6 +212,22 @@ class ReactionView : View {
         }
     }
 
+    /***
+     * Trạng thái start.
+     * Hiển thị các view theo thứ tự và từ dưới lên.
+     */
+    fun start() {
+        visibility = VISIBLE
+
+        mState = StateDraw.START
+
+        startAnimation(StartEmotionAnimation())
+    }
+
+    /**
+     * Trạng thái khi chạm và di chuyển.
+     * Phóng to, thu nhỏ các view.
+     * */
     private fun choosing(position: Int) {
         if (mCurrentPosition == position && mState == StateDraw.CHOOSING) return
 
@@ -214,6 +237,10 @@ class ReactionView : View {
         startAnimation(ChooseEmotionAnimation(mCurrentPosition))
     }
 
+    /**
+     * Trạng thái khi nhả.
+     * Đưa các view về trạng thái bình thường.
+     * */
     private fun normal() {
         mState = StateDraw.NORMAL
 
@@ -221,25 +248,31 @@ class ReactionView : View {
     }
 
     /**
-     * Chỉ một Animation() được thực hiện tại một thời điểm,
+     * NOTE: Chỉ một Animation() được thực hiện tại một thời điểm,
      * nếu nhiều Animation() được dùng, sẽ thực hiện Animation cuối cùng.
+     *
+     * Là animation xử lý phóng to, thu nhỏ một view.
+     * Điều quan trọng ở đây là xác định from(giá trị bắt đầu)  to(giá trị kết thúc)
+     * Đồng thời xác định mối quan hệ giữa chúng theo thời gian interpolatedTime có giá trị
+     * nằm trong khoảng [0, 1] xem method [getCurrentValue]
      * */
     inner class ChooseEmotionAnimation(private val position: Int) : Animation() {
 
-        private val DURATION = 200L
+        private val DURATION = 300L
 
         init {
             duration = DURATION
         }
 
         override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
-            var fromBoard = mBoard.getCurrentHeight()
-            var toBoard   = getToBoard()
+            val fromBoard = mBoard.getCurrentHeight()
+            val toBoard   = getToBoard()
+            mBoard.setCurrentHeight(getCurrentValue(interpolatedTime, fromBoard, toBoard))
 
             var d = 0.0F
             for (i in 0 until mEmotions.size) {
-                var fromEmotion = mEmotions[i].getCurrentSize()
-                var toEmotion = getToEmotion(i)
+                val fromEmotion = mEmotions[i].getCurrentSize()
+                val toEmotion   = getToEmotion(i)
 
                 mEmotions[i].setCurrentSize(
                         getCurrentValue(interpolatedTime, fromEmotion, toEmotion),
@@ -248,8 +281,6 @@ class ReactionView : View {
                 )
                 d = getDistance(i, d)
             }
-
-            mBoard.setCurrentHeight(getCurrentValue(interpolatedTime, fromBoard, toBoard))
 
             invalidate()
         }
@@ -290,14 +321,12 @@ class ReactionView : View {
         }
     }
 
-    fun show() {
-        visibility = VISIBLE
-
-        mState = StateDraw.START
-
-        startAnimation(StartEmotionAnimation())
-    }
-
+    /**
+     * Là animation xử lý chuyển động khi bắt đầu hiển thị, các view sẽ di chuyển từ dưới lên dạng
+     * EaseOutback.
+     * Quan trọng là cần xác định vị trí hiển thị cuối cùng(vị trí sau khi kết thúc animation)
+     * Ở đây là ylast.
+     * */
     inner class StartEmotionAnimation: Animation() {
 
         private val DURATION = 900L
@@ -314,7 +343,7 @@ class ReactionView : View {
             easeOutBack.deltaTime = 300F
             easeOutBack.end       = 500F
 
-            startTimeUnit = (duration - easeOutBack.deltaTime) / mEmotions.size
+            startTimeUnit = (duration - easeOutBack.deltaTime) / mEmotions.size // value = 100
         }
 
         override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {

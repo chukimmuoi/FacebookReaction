@@ -13,8 +13,8 @@ object EaseOutBack {
 
     private val s = 1.70158
 
-    var deltaTime: Float = 0.0F
-    var end: Float       = 0.0F
+    var deltaTime: Float = 0.0F // Khoảng thời gian thực hiện hết 1 animation.
+    var end: Float       = 0.0F // Khoảng giá trị thay đổi ở đây là [0, end] hoặc [end - 0].
 
     fun calculateDescending(currentTime: Float, deltaTime: Float, startTime: Float, end: Float,
                             begin: Float = 0F): Float {
