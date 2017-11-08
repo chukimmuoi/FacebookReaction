@@ -5,6 +5,7 @@ import android.graphics.*
 import android.text.TextPaint
 import com.developers.chukimmuoi.reaction.util.getGoldenRatioLarge
 import com.developers.chukimmuoi.reaction.util.getGoldenRatioSmall
+import com.developers.chukimmuoi.reaction.view.ReactionView
 
 /**
  * @author  : Hanet Electronics
@@ -46,6 +47,14 @@ class Emotions(private val resources: Resources, val image: Int, val title: Int,
         titlePaint.textAlign   = Paint.Align.CENTER
     }
 
+    /**
+     * Thiết lập các giái trị left, top, right, bottom để vẽ bitmap emotions.
+     *
+     * @param xStart Chính là toạ độ left của board (toạ độ x ngoài cùng bên trái)
+     * @param d Khoảng cách từ xStart đến emotions trừ đi giá trị margin
+     * @param yCenter Toạ độ tâm y của hình vẽ
+     * @param size Kích thước của hình vẽ
+     * */
     fun setCoordinates(xStart: Float, d: Float, yCenter: Float, size: Int) {
         this.distance = d
 
@@ -58,34 +67,25 @@ class Emotions(private val resources: Resources, val image: Int, val title: Int,
         createBackgroundTitle(size.toFloat(), left, top, right, bottom)
     }
 
-    fun setCoordinates(left: Float, top: Float, right: Float, bottom: Float) {
-        this.left   = left
-        this.top    = top
-        this.right  = right
-        this.bottom = bottom
-
-        emotionRectF = RectF(left, top, right, bottom)
-        createBackgroundTitle(Math.max(right - left, bottom - top), left, top, right, bottom)
-    }
-
-    fun setCoordinates(xCenter: Float, yCenter: Float, size: Int) {
-        this.left   = xCenter - size * 0.5F
-        this.top    = yCenter - size * 0.5F
-        this.right  = left + size
-        this.bottom = top  + size
-
-        emotionRectF = RectF(left, top, right, bottom)
-        createBackgroundTitle(size.toFloat(), left, top, right, bottom)
-    }
-
+    /**
+     * Vẽ bitmap dựa trên toạ độ và thông tin cần thiết.
+     *
+     * @param canvas được truyền từ class extends view.
+     */
     fun draw(canvas: Canvas) {
         canvas.drawBitmap(bitmap, null, emotionRectF, emotionPaint)
 
+        // Chỉ hiển thị khi zoom emotions.
         if (right - left > sizeNormal || bottom - top > sizeNormal) {
             drawTitle(canvas)
         }
     }
 
+    /**
+     * Vẽ title của emotions bao gồm hình nền (drawRoundRect) và text (drawText)
+     *
+     * @param canvas được truyền từ class extends view.
+     * */
     private fun drawTitle(canvas: Canvas) {
         canvas.drawRoundRect(
                 bgTitleRectF,
@@ -100,6 +100,12 @@ class Emotions(private val resources: Resources, val image: Int, val title: Int,
         canvas.drawText(resources.getString(title), xPos, yPos, titlePaint)
     }
 
+    /**
+     * Kiểm tra vị trí có toạ độ (xCoordinates, yCoordinates) có thuộc vào vùng phía dưới của emotions
+     *
+     * @param xCoordinates Toạ độ x
+     * @param yCoordinates Toạ độ y
+     * */
     fun checkMoveAction(xCoordinates: Float, yCoordinates: Float): Boolean {
         var output = false
         if (xCoordinates > left && xCoordinates < right && yCoordinates > bottom) {
@@ -109,11 +115,24 @@ class Emotions(private val resources: Resources, val image: Int, val title: Int,
         return output
     }
 
+    /**
+     * Lấy ra giá trị size hiên tại của emotions. Để làm giá trị bắt đầu khi thực hiện animation.
+     * [ReactionView.ChooseEmotionAnimation]
+     * */
     fun getCurrentSize(): Float {
 
         return Math.max(bottom - top, right - left)
     }
 
+    /**
+     * Update giá trị size mới cho hình hình vẽ. Dựa vào gía trị size, vị trí bắt đầu và khoảng cách
+     * sẽ tính toán các giá trị cần thiết để vẽ ra hình mới.
+     * Giá trị thay đổi là left, top và right. Bottom là giá trị cố định.
+     *
+     * @param size Giá trị kích thước mới của hình vẽ
+     * @param xStart Chính là toạ độ left của board (toạ độ x ngoài cùng bên trái)
+     * @param d Khoảng cách từ xStart đến emotions trừ đi giá trị margin
+     * */
     fun setCurrentSize(size: Float, xStart: Float, d: Float) {
         distance = d
 
@@ -125,6 +144,12 @@ class Emotions(private val resources: Resources, val image: Int, val title: Int,
         createBackgroundTitle(size, left, top, right, bottom)
     }
 
+    /**
+     * Update toạ độ tâm theo chiều dọc cho hình vẽ, dựa vào toạ độ tâm sẽ update toạ độ top, bottom.
+     * Mục đích để thực hiện animation [ReactionView.StartEmotionAnimation]
+     *
+     * @param yCenter Giá trị toạ độ tâm y của hình vẽ.
+     * */
     fun setCurrentTopAndBottom(yCenter: Float) {
         top    = yCenter - sizeNormal * 0.5F
         bottom = yCenter + sizeNormal * 0.5F
@@ -133,13 +158,17 @@ class Emotions(private val resources: Resources, val image: Int, val title: Int,
         createBackgroundTitle(Math.max(right - left, bottom - top), left, top, right, bottom)
     }
 
+    /**
+     * Thiết lập tính toán các giá trị để vẽ title dựa trên giá trị left, top, right, bottom
+     * của emotion chính.
+     * */
     private fun createBackgroundTitle(size: Float, left: Float, top: Float, right: Float, bottom: Float) {
         val width  = (size - sizeNormal)
         val height = width.getGoldenRatioSmall()
         val margin = (width - height).getGoldenRatioLarge()
 
         val xCenter = left + (right - left) * 0.5F
-        val yCenter = top + (bottom - top) * 0.5F - size * 0.5F - margin
+        val yCenter = top  + (bottom - top) * 0.5F - size * 0.5F - margin
 
         bgTitleRectF = RectF(
                 xCenter - width * 0.5F, yCenter - height * 0.5F,

@@ -34,7 +34,7 @@ object EaseOutBack {
      * */
     fun calculateAscending(currentTime: Float, deltaTime: Float, startTime: Float, end: Float,
                            begin: Float = 0F): Float {
-        // NOTE: Luôn đảm bảo giá trị của time nằm trong khoảng [-1, 0], begin: Float
+        // NOTE: Luôn đảm bảo giá trị của time nằm trong khoảng [-1, 0]
         var time = Math.min(currentTime - startTime, deltaTime) / deltaTime - 1
         return (end * (time * time * ((s + 1) * time + s) + 1) + begin).toFloat()
     }
