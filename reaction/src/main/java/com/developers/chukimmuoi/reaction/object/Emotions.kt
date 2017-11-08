@@ -75,7 +75,7 @@ class Emotions(private val resources: Resources, val image: Int, val title: Int,
     fun draw(canvas: Canvas) {
         canvas.drawBitmap(bitmap, null, emotionRectF, emotionPaint)
 
-        // Chỉ hiển thị khi zoom emotions.
+        // Chỉ vẽ khi zoom emotions.
         if (right - left > sizeNormal || bottom - top > sizeNormal) {
             drawTitle(canvas)
         }
@@ -93,6 +93,7 @@ class Emotions(private val resources: Resources, val image: Int, val title: Int,
                 bgTitlePaint
         )
 
+        // Vẽ text ở chính giữa hình chữ nhật.
         var xPos = bgTitleRectF.left  + bgTitleRectF.width() * 0.5F
         var yPos = bgTitleRectF.top   + bgTitleRectF.height() * 0.5F -
                 (titlePaint.descent() + titlePaint.ascent()) * 0.5F
@@ -159,13 +160,16 @@ class Emotions(private val resources: Resources, val image: Int, val title: Int,
     }
 
     /**
-     * Thiết lập tính toán các giá trị để vẽ title dựa trên giá trị left, top, right, bottom
+     * Thiết lập tính toán các giá trị để vẽ title dựa trên giá trị size, left, top, right, bottom
      * của emotion chính.
+     * Dựa vào text size cùng số ký tự sẽ xác định kích thước background cần vẽ.
      * */
     private fun createBackgroundTitle(size: Float, left: Float, top: Float, right: Float, bottom: Float) {
-        val width  = (size - sizeNormal)
-        val height = width.getGoldenRatioSmall()
-        val margin = (width - height).getGoldenRatioLarge()
+        titlePaint.textSize = (size - sizeNormal) * 0.45F.getGoldenRatioSmall()
+
+        val margin = (size - sizeNormal).getGoldenRatioSmall()
+        val width  = (resources.getString(title).length * titlePaint.textSize + margin).getGoldenRatioSmall()
+        val height = titlePaint.textSize.getGoldenRatioLarge()
 
         val xCenter = left + (right - left) * 0.5F
         val yCenter = top  + (bottom - top) * 0.5F - size * 0.5F - margin
@@ -174,7 +178,5 @@ class Emotions(private val resources: Resources, val image: Int, val title: Int,
                 xCenter - width * 0.5F, yCenter - height * 0.5F,
                 xCenter + width * 0.5F, yCenter + height * 0.5F
         )
-
-        titlePaint.textSize = (width - height).getGoldenRatioSmall()
     }
 }

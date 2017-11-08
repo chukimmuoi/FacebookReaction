@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_emotion_like">Thích</string>
+    <string name="title_emotion_love">Yêu thích</string>
+    <string name="title_emotion_haha">Haha</string>
+    <string name="title_emotion_wow">Wow</string>
+    <string name="title_emotion_cry">Buồn</string>
+    <string name="title_emotion_angry">Phẫn nộ</string>
+</resources>
