@@ -35,6 +35,9 @@ class Emotions(private val resources: Resources, val image: Int, val title: Int,
 
     var distance: Float = 0.0F
 
+    private var xPos: Float = 0.0F
+    private var yPos: Float = 0.0F
+
     init {
         emotionPaint.isAntiAlias = true
 
@@ -92,11 +95,6 @@ class Emotions(private val resources: Resources, val image: Int, val title: Int,
                 bgTitleRectF.height() * 0.5F, bgTitleRectF.height() * 0.5F,
                 bgTitlePaint
         )
-
-        // Vẽ text ở chính giữa hình chữ nhật.
-        var xPos = bgTitleRectF.left  + bgTitleRectF.width() * 0.5F
-        var yPos = bgTitleRectF.top   + bgTitleRectF.height() * 0.5F -
-                (titlePaint.descent() + titlePaint.ascent()) * 0.5F
 
         canvas.drawText(resources.getString(title), xPos, yPos, titlePaint)
     }
@@ -178,5 +176,12 @@ class Emotions(private val resources: Resources, val image: Int, val title: Int,
                 xCenter - width * 0.5F, yCenter - height * 0.5F,
                 xCenter + width * 0.5F, yCenter + height * 0.5F
         )
+
+        // Vẽ text ở chính giữa hình chữ nhật.
+        xPos = bgTitleRectF.left  + bgTitleRectF.width() * 0.5F
+        yPos = bgTitleRectF.top   + bgTitleRectF.height() * 0.5F -
+                (titlePaint.descent() + titlePaint.ascent()) * 0.5F // ((textPaint.descent() + textPaint.ascent()) / 2)
+                                                                    // is the distance from the baseline to the center.
+
     }
 }
