@@ -9,7 +9,7 @@ Library facebook emotions.
 
 Có 3 method đặc biệt trong việc custom view:
 
-  - **onMeasure()**: Xác định, hiển thị view ở vị trí như thế nào so với view group. Tuỳ thuộc vào width & height mà view và view group của nó xác nhận. Nên sử dụng method **resolveSize()** có sẵn để thực hiện công viêcj này, sau khi tìm ra giá trị width & height thích hợp nhớ gọi **setMeasuredDimension(width, height)** để thực hiện thiết lập.
+  - **onMeasure()**: Xác định, hiển thị view ở vị trí như thế nào so với view group. Tuỳ thuộc vào width & height mà view và view group của nó xác nhận. Nên sử dụng method **resolveSize()** có sẵn để thực hiện công việc này, sau khi tìm ra giá trị width & height thích hợp nhớ gọi **setMeasuredDimension(width, height)** để thực hiện thiết lập.
   
   - **onLayout()**: Hiển thị view mặc định. Xác định các giá trị mặc định để vẽ view tại đây.
   
@@ -17,7 +17,7 @@ Có 3 method đặc biệt trong việc custom view:
   
 ## 2. Xử lý animation.
 
-Phải tìm ra mối liên hệ giữa các đặc điểm của hình vẽ left, top, right, bottom, height, width, size... với giá trị thay đổi theo thời gian (duration). Giá trị nào thay đổi, giá trị nào giữ nguyên, từ đó viết một method mới, để cập nhật lại các giá trị cần thiết(left, top, rigth, bottom) theo giá trị thay đổi(width, height, size) của hình vẽ.
+Phải tìm ra mối liên hệ giữa các đặc điểm của hình vẽ left, top, right, bottom, height, width, size... với giá trị thay đổi theo thời gian (duration). Giá trị nào thay đổi, giá trị nào giữ nguyên, từ đó viết một method mới, để cập nhật lại các giá trị cần thiết (left, top, rigth, bottom) theo giá trị thay đổi (width, height, size) của hình vẽ.
 
 ## 3. Đi sâu về animation.
 
