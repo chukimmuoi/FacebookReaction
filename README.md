@@ -37,3 +37,5 @@ Phải tìm ra mối liên hệ giữa các đặc điểm của hình vẽ left
 7 - http://easings.net/vi (Animation)
 
 8 - https://github.com/sephiroth74/Android-Easing/blob/master/library/src/main/java/it/sephiroth/android/library/easing/Back.java (Animation)
+
+9 - https://github.com/daimajia/AnimationEasingFunctions/blob/master/library/src/main/java/com/daimajia/easing/back/BackEaseOut.java ()
