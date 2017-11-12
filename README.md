@@ -31,3 +31,5 @@ Phải tìm ra mối liên hệ giữa các đặc điểm của hình vẽ left
 4 - http://graphics-geek.blogspot.com/2012/01/curved-motion-in-android.html (chuyển động cong)
 
 5 - https://image.online-convert.com/convert-to-gif (convert mp4 to gif)
+
+6 - https://developer.android.com/guide/topics/graphics/overview.html (Animation)
