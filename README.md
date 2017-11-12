@@ -20,7 +20,7 @@ Có 3 method đặc biệt trong việc custom view:
 Phải tìm ra mối liên hệ giữa các đặc điểm của hình vẽ left, top, right, bottom, height, width, size... với giá trị thay đổi theo thời gian (duration). Giá trị nào thay đổi, giá trị nào giữ nguyên, từ đó viết một method mới, để cập nhật lại các giá trị cần thiết (left, top, rigth, bottom) theo giá trị thay đổi (width, height, size) của hình vẽ.
 
 ## 3. Đi sâu về animation.
-
+![alt text](https://dl.dropboxusercontent.com/s/5q6rb48q50cqvez/%E1%BA%A2nh%20ch%E1%BB%A5p%20M%C3%A0n%20h%C3%ACnh%202017-11-12%20l%C3%BAc%2014.40.48.png?dl=0)
 
 1 - https://kipalog.com/posts/Android-2D-Graphics--Phan-tich-va-mo-phong-nut-cam-xuc-cua-Android-Facebook-Application
 
@@ -33,3 +33,7 @@ Phải tìm ra mối liên hệ giữa các đặc điểm của hình vẽ left
 5 - https://image.online-convert.com/convert-to-gif (convert mp4 to gif)
 
 6 - https://developer.android.com/guide/topics/graphics/overview.html (Animation)
+
+7 - http://easings.net/vi (Animation)
+
+8 - https://github.com/sephiroth74/Android-Easing/blob/master/library/src/main/java/it/sephiroth/android/library/easing/Back.java (Animation)
