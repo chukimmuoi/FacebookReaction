@@ -315,7 +315,7 @@ class ReactionView : View {
             else -> 0.0F
         }
 
-
+        // Chính là custom TypeEvaluator.
         private fun getCurrentValue(interpolated: Float, from: Float, to: Float): Float {
             return from + interpolated * (to - from)
         }
